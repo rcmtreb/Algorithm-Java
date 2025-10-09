@@ -62,24 +62,31 @@ public class AlgorithmComplexityTest {
 
         for (int i = 0; i < testArrays.length; i++) {
             int size = sizes[i];
-            int[] quickCopy = Arrays.copyOf(testArrays[i], testArrays[i].length);
+            int repeats = 1; // you can increase this for more visible timing results
 
-            // gaya lang nung sa searching algo sa taas
-            /**palitan nyo ung inyo 
-            ===== FROM =====
-            double quickTime = 0.000; 
-            ===== TO =====
+            // create copies to ensure fair timing
+            int[] bubbleCopy = Arrays.copyOf(testArrays[i], testArrays[i].length);
+            int[] selectionCopy = Arrays.copyOf(testArrays[i], testArrays[i].length);
+
+            // ==== BUBBLE SORT ====
             long start = System.nanoTime();
             for (int r = 0; r < repeats; r++) {
-                quickTime(kung ano ung parameters nyo);
+                bubbleSort(bubbleCopy);
             }
-            **/
+            double bubbleTime = (System.nanoTime() - start) / 1_000_000.0; // ms
+
+            // ==== SELECTION SORT ====
+            start = System.nanoTime();
+            for (int r = 0; r < repeats; r++) {
+                selectionSort(selectionCopy);
+            }
+            double selectionTime = (System.nanoTime() - start) / 1_000_000.0; // ms
+
+            // placeholders for other sorts
             double quickTime = 0.000;
             double mergeTime = 0.000;
             double heapTime = 0.000;
-            double bubbleTime = 0.000;
             double insertionTime = 0.000;
-            double selectionTime = 0.000;
             double shellTime = 0.000;
 
             // ==== PRINT SORTING TABLE ROW ====
@@ -112,4 +119,37 @@ public class AlgorithmComplexityTest {
         return -1;
     }
 
+    // ===== BUBBLE SORT =====
+    public static void bubbleSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n - 1; i++) {
+            boolean swapped = false;
+            for (int j = 0; j < n - i - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                    swapped = true;
+                }
+            }
+            // Optimization: stop if already sorted
+            if (!swapped) break;
+        }
+    }
+
+    // ===== SELECTION SORT =====
+    public static void selectionSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < n; j++) {
+                if (arr[j] < arr[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            int temp = arr[minIndex];
+            arr[minIndex] = arr[i];
+            arr[i] = temp;
+        }
+    }
 }
